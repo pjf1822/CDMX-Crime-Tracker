@@ -7,20 +7,63 @@ import { ThemedView } from "@/components/ThemedView";
 import Mapbox from "@rnmapbox/maps";
 
 import { MAPBOX_ACCESS_TOKEN } from "@env";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function HomeScreen() {
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
   const mapRef = useRef(null);
+  const [onePoint, setOnePoint] = useState([]);
+
+  const fetchDataa = async () => {
+    const response = await fetch(
+      "https://api.hoyodecrimen.com/api/v1/cuadrantes/geojson"
+    );
+    const text = await response.json();
+    return text.features[4].geometry.coordinates;
+  };
+
+  useEffect(() => {
+    async function shitHole() {
+      const fetchMexicoData = await fetchDataa();
+      setOnePoint(fetchMexicoData);
+    }
+    shitHole();
+  }, []);
+
+  const geojson = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: {
+          type: "Polygon",
+          coordinates: onePoint,
+        },
+        properties: {
+          title: "My Area",
+        },
+      },
+    ],
+  };
 
   return (
     <View style={styles.container}>
       <Mapbox.MapView
         projection="globe"
-        styleURL="mapbox://styles/pjf1822/clekajgr3000001l8y22r3psx"
+        styleURL="mapbox://styles/pjf1822/cm1aovsic00vq01pcbyo39gsz"
         style={styles.map}
         ref={mapRef}
-      ></Mapbox.MapView>
+      >
+        <Mapbox.ShapeSource id="areaSource" shape={geojson}>
+          <Mapbox.FillLayer
+            id="areaFill"
+            style={{
+              fillColor: "rgba(255, 0, 0, 0.5)", // semi-transparent red
+              fillOpacity: 1,
+            }}
+          />
+        </Mapbox.ShapeSource>
+      </Mapbox.MapView>
     </View>
   );
 }
