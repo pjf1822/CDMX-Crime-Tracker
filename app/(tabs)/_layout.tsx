@@ -5,10 +5,11 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import Mapbox from "@rnmapbox/maps";
+import { MAPBOX_ACCESS_TOKEN } from "@env";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  Mapbox.setAccessToken("");
+  Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
   return (
     <Tabs
