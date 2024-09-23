@@ -5,65 +5,110 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Mapbox from "@rnmapbox/maps";
+import cuadrantesData from "../../GeoJSONData.json";
 
 import { MAPBOX_ACCESS_TOKEN } from "@env";
 import { useEffect, useRef, useState } from "react";
 
+interface GeoJSONFeature {
+  type: string;
+  properties: {
+    alcaldia: string;
+    sector: string;
+    cuadrante: string;
+  };
+  geometry: {
+    type: string;
+    coordinates: number[][][];
+  };
+}
+interface CrimeData {
+  count: number;
+}
 export default function HomeScreen() {
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
   const mapRef = useRef(null);
   const [onePoint, setOnePoint] = useState([]);
+  const [geoData, setGeoData] = useState<GeoJSONFeature[]>([]);
+  const [crimeCounts, setCrimeCounts] = useState({});
 
-  const fetchDataa = async () => {
+  const fetchCrimeData = async (cuadrante: string): Promise<CrimeData[]> => {
     const response = await fetch(
-      "https://api.hoyodecrimen.com/api/v1/cuadrantes/geojson"
+      `https://api.hoyodecrimen.com/api/v1/cuadrantes/${cuadrante}/crimes/all/period`
     );
-    const text = await response.json();
-    return text.features[4].geometry.coordinates;
+    const data = await response.json();
+    return data.rows; // Return the rows containing crime data
   };
 
   useEffect(() => {
-    async function shitHole() {
-      const fetchMexicoData = await fetchDataa();
-      setOnePoint(fetchMexicoData);
+    async function loadGeoData() {
+      setGeoData(cuadrantesData.features.slice(0, 10));
+      // Fetch crime data for each cuadrante
+      const counts: Record<string, number> = {};
+      for (const item of cuadrantesData.features) {
+        const cuadrante = item.properties.cuadrante;
+        const crimes = await fetchCrimeData(cuadrante); // Use the cuadrante variable
+        const totalCount = crimes.reduce((acc, crime) => acc + crime.count, 0);
+        counts[cuadrante] = totalCount;
+      }
+      setCrimeCounts(counts);
     }
-    shitHole();
+    loadGeoData();
   }, []);
 
   const geojson = {
     type: "FeatureCollection",
-    features: [
-      {
+    features: geoData.map((item) => {
+      // console.log("GeoData Item:", item); // Log the item here
+      return {
         type: "Feature",
-        geometry: {
-          type: "Polygon",
-          coordinates: onePoint,
-        },
+        geometry: item.geometry,
         properties: {
-          title: "My Area",
+          cuadrante: item.properties.cuadrante, // Access properties correctly
+          sector: item.properties.sector,
+          crimeCount: crimeCounts[item.properties.cuadrante] || 0, // Use properties
         },
-      },
-    ],
+      };
+    }),
   };
-
   return (
     <View style={styles.container}>
-      <Mapbox.MapView
-        projection="globe"
-        styleURL="mapbox://styles/pjf1822/cm1aovsic00vq01pcbyo39gsz"
-        style={styles.map}
-        ref={mapRef}
-      >
-        <Mapbox.ShapeSource id="areaSource" shape={geojson}>
-          <Mapbox.FillLayer
-            id="areaFill"
-            style={{
-              fillColor: "rgba(255, 0, 0, 0.5)", // semi-transparent red
-              fillOpacity: 1,
-            }}
-          />
-        </Mapbox.ShapeSource>
-      </Mapbox.MapView>
+      {geoData.length > 0 && (
+        <Mapbox.MapView
+          projection="globe"
+          styleURL="mapbox://styles/pjf1822/cm1aovsic00vq01pcbyo39gsz"
+          style={styles.map}
+          ref={mapRef}
+        >
+          <Mapbox.ShapeSource id="areaSource" shape={geojson}>
+            {/* FillLayer to display polygons */}
+            <Mapbox.FillLayer
+              id="areaFill"
+              style={{
+                fillColor: [
+                  "case",
+                  ["<", ["get", "crimeCount"], 10],
+                  "rgba(255, 0, 0, 0.2)", // Low count
+                  ["<", ["get", "crimeCount"], 30],
+                  "rgba(255, 0, 0, 0.5)", // Medium count
+                  ["<", ["get", "crimeCount"], 50],
+                  "rgba(255, 0, 0, 0.7)", // High count
+                  "rgba(255, 0, 0, 1)", // Very high count
+                ],
+                fillOpacity: 1,
+              }}
+            />
+            <Mapbox.LineLayer
+              id="areaOutline"
+              style={{
+                lineColor: "#FF0000", // red outline
+                lineWidth: 2, // outline thickness
+                lineOpacity: 1,
+              }}
+            />
+          </Mapbox.ShapeSource>
+        </Mapbox.MapView>
+      )}
     </View>
   );
 }

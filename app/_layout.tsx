@@ -30,7 +30,7 @@ export default function RootLayout() {
         // );
         // console.log(csvData); // Use the CSV data as needed
 
-        const fetchMexicoData = await fetchDataa();
+        // const fetchMexicoData = await fetchDataa();
         await SplashScreen.hideAsync();
       } catch (error) {
         console.error("Error fetching CSV:", error);
