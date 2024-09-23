@@ -27,7 +27,7 @@ export default function RootLayout() {
   useEffect(() => {
     async function loadResourcesAndDataAsync() {
       try {
-        const localGeoData = cuadrantesData?.features.slice(0, 1);
+        const localGeoData = cuadrantesData?.features.slice(0, 800);
         setGeoData(localGeoData);
 
         const counts = await fetchCrimeCounts(localGeoData);
