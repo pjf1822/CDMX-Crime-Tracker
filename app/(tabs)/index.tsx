@@ -8,9 +8,15 @@ import useStore, { CustomFeatureCollection } from "../../zustandStore";
 export default function HomeScreen() {
   const { geoData, crimeCounts } = useStore();
 
+  // console.log(geoData, "teh geoData");
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
   const mapRef = useRef(null);
 
+  const crimeCountsLookup = crimeCounts.reduce((acc, curr) => {
+    const cuadranteKey = Object.keys(curr)[0]; // Get the key (cuadrante)
+    acc[cuadranteKey] = curr[cuadranteKey]; // Map cuadrante to its count
+    return acc;
+  }, {} as Record<string, number>);
   const geojson: CustomFeatureCollection = {
     type: "FeatureCollection",
     features: geoData.map((item) => ({
@@ -19,7 +25,7 @@ export default function HomeScreen() {
       properties: {
         cuadrante: item.properties.cuadrante,
         sector: item.properties.sector,
-        crimeCount: crimeCounts[item.properties.cuadrante] || 0,
+        crimeCount: crimeCountsLookup[item.properties.cuadrante] || 0, // Use the lookup object
       },
     })),
   };
@@ -39,17 +45,17 @@ export default function HomeScreen() {
           />
 
           <Mapbox.ShapeSource id="areaSource" shape={geojson}>
-            {/* FillLayer to display polygons */}
+            {/* FillLayer to display polygons with crime counts */}
             <Mapbox.FillLayer
               id="areaFill"
               style={{
                 fillColor: [
                   "case",
-                  ["<", ["get", "crimeCount"], 10],
+                  ["<", ["get", "crimeCount"], 0],
                   "rgba(255, 0, 0, 0.2)", // Low count
-                  ["<", ["get", "crimeCount"], 30],
+                  ["<", ["get", "crimeCount"], 1],
                   "rgba(255, 0, 0, 0.5)", // Medium count
-                  ["<", ["get", "crimeCount"], 50],
+                  ["<", ["get", "crimeCount"], 3],
                   "rgba(255, 0, 0, 0.7)", // High count
                   "rgba(255, 0, 0, 1)", // Very high count
                 ],

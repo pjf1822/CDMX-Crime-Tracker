@@ -1,48 +1,37 @@
 import { CrimeData } from "./zustandStore";
-import fs from "fs";
-import path from "path";
+import * as FileSystem from "expo-file-system"; // Import expo-file-system
 
 export const fetchCrimeData = async (
   cuadrante: string
 ): Promise<CrimeData[]> => {
-  const response = await fetch(
-    `https://api.hoyodecrimen.com/api/v1/cuadrantes/${cuadrante}/crimes/all/period`
-  );
-  const data = await response.json();
-  return data.rows;
+  const json = require("./assets/crimeData.json"); // Adjust the path as needed
+  // Convert the imported JSON to an array
+  return json.filter((crime: CrimeData) => crime.cuadrante === cuadrante);
 };
 
 export const fetchCrimeCounts = async (geoData: any) => {
-  const allCrimes = [];
-  const counts: Record<string, number> = {};
+  const crimeCountsArray = [];
   for (const item of geoData) {
     const cuadrante = item.properties.cuadrante;
     const crimes = await fetchCrimeData(cuadrante);
-    // console.log(crimes);
-    // const totalCount = crimes.reduce((acc, crime) => acc + crime.count, 0);
-    // counts[cuadrante] = totalCount;
-    for (const crime of crimes) {
-      // Log the current crime details
+    const homicideCrime = crimes.find(
+      (crime) => crime.crime === "HOMICIDIO DOLOSO"
+    )!;
 
-      allCrimes.push({
-        cuadrante: cuadrante,
-        crime: crime.crime,
-        count: crime.count,
-        end_date: crime.end_date, // Adding end_date
-        population: crime.population, // Adding population
-        sector: crime.sector, // Adding sector
-        start_date: crime.start_date, // Adding start_date
-      });
-    }
+    crimeCountsArray.push({ [cuadrante]: homicideCrime.count });
   }
-  const filePath = path.join(__dirname, "crimeData.json"); // Adjust path as necessary
-  fs.writeFile(filePath, JSON.stringify(allCrimes, null, 2), (err) => {
-    if (err) {
-      console.error("Error saving crime data:", err);
-    } else {
-      console.log("Crime data saved to", filePath);
-    }
-  });
 
-  return counts;
+  // const filePath = FileSystem.documentDirectory + "crimeData.json";
+
+  // try {
+  //   // Write the JSON string to the file
+  //   await FileSystem.writeAsStringAsync(
+  //     filePath,
+  //     JSON.stringify(allCrimes, null, 2)
+  //   );
+  //   console.log("Crime data saved to", filePath);
+  // } catch (err) {
+  //   console.error("Error saving crime data:", err);
+  // }
+  return crimeCountsArray;
 };

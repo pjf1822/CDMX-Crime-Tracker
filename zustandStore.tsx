@@ -20,7 +20,9 @@ interface GeoJSONFeature {
 }
 
 export interface CrimeData {
-  count: number;
+  cuadrante: string; // The cuadrante identifier
+  crime: string; // Description of the crime
+  count: number; // Number of occurrences
 }
 
 interface CustomFeature extends Feature<Geometry, GeoJsonProperties> {
@@ -39,14 +41,14 @@ export interface CustomFeatureCollection
 interface StoreState {
   geoData: GeoJSONFeature[];
   setGeoData: (data: GeoJSONFeature[]) => void;
-  crimeCounts: Record<string, number>; // Object with cuadrante as the key and crime count as the value
-  setCrimeCounts: (counts: Record<string, number>) => void;
+  crimeCounts: Array<Record<string, number>>; // Array of objects with cuadrante and count
+  setCrimeCounts: (counts: Array<Record<string, number>>) => void;
 }
 
 const useStore = create<StoreState>((set) => ({
   geoData: [],
   setGeoData: (data) => set({ geoData: data }),
-  crimeCounts: {},
+  crimeCounts: [], // Now an array
   setCrimeCounts: (counts) => set({ crimeCounts: counts }),
 }));
 export default useStore;
