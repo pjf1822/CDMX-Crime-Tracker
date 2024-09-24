@@ -30,7 +30,7 @@ const CrimePicker = () => {
         flex: 1,
         padding: 30,
         maxHeight: 200,
-        maxWidth: 400,
+        maxWidth: 600,
         justifyContent: "center",
       }}
     >
@@ -50,7 +50,7 @@ const CrimePicker = () => {
 const styles = StyleSheet.create({
   picker: {
     height: 150,
-    width: 300,
+    width: 400,
     // backgroundColor: "green",
   },
 });
