@@ -27,12 +27,12 @@ export default function RootLayout() {
   useEffect(() => {
     async function loadResourcesAndDataAsync() {
       try {
+        await SplashScreen.hideAsync();
         const localGeoData = cuadrantesData?.features.slice(0, 800);
         setGeoData(localGeoData);
 
-        const counts = await fetchCrimeCounts(localGeoData);
+        const counts = await fetchCrimeCounts("ROBO A NEGOCIO C.V.");
         setCrimeCounts(counts);
-        await SplashScreen.hideAsync();
       } catch (error) {
         console.error("Error fetching CSV:", error);
       }

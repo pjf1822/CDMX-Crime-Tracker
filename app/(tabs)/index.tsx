@@ -4,6 +4,7 @@ import Mapbox from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "@env";
 import { useRef } from "react";
 import useStore, { CustomFeatureCollection } from "../../zustandStore";
+import CrimePicker from "@/CrimePicker";
 
 export default function HomeScreen() {
   const { geoData, crimeCounts } = useStore();
@@ -73,6 +74,7 @@ export default function HomeScreen() {
           </Mapbox.ShapeSource>
         </Mapbox.MapView>
       )}
+      <CrimePicker />
     </View>
   );
 }
