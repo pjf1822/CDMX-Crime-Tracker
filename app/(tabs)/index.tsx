@@ -77,7 +77,7 @@ export default function HomeScreen() {
         </Mapbox.MapView>
       )}
 
-      {/* <CrimePicker /> */}
+      <CrimePicker />
     </View>
   );
 }
