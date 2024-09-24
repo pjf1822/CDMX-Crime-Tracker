@@ -19,18 +19,22 @@ interface GeoJSONFeature {
   };
 }
 
+interface Properties {
+  alcaldia: string;
+  cuadrante: string;
+  sector: string;
+}
+
+export interface GeoDataItem {
+  type: string;
+  geometry: { type: string; coordinates: number[][][] };
+  properties: Properties;
+}
+
 export interface CrimeData {
   cuadrante: string; // The cuadrante identifier
   crime: string; // Description of the crime
   count: number; // Number of occurrences
-}
-
-export interface CustomFeature extends Feature<Geometry, GeoJsonProperties> {
-  properties: {
-    cuadrante: string;
-    sector: string;
-    crimeCount: number;
-  };
 }
 
 export enum CrimeTypes {
@@ -54,6 +58,19 @@ export enum CrimeTypes {
   ROBO_DE_VEHICULO_AUTOMOTOR_SV = "ROBO DE VEHICULO AUTOMOTOR S.V.",
   SECUESTRO = "SECUESTRO",
   VIOLACION = "VIOLACION",
+}
+
+export interface CustomFeature extends Feature<Geometry, GeoJsonProperties> {
+  type: "Feature";
+  geometry: {
+    type: "Polygon"; // Specify the geometry type as Polygon
+    coordinates: number[][][]; // For a Polygon, coordinates are an array of arrays of arrays of numbers
+  };
+  properties: {
+    cuadrante: string;
+    sector: string;
+    crimeCount: number;
+  };
 }
 
 export interface CustomFeatureCollection
