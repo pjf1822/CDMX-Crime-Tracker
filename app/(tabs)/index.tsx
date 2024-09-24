@@ -1,12 +1,16 @@
 import { Image, StyleSheet, Platform, View } from "react-native";
-
+import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "@env";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useStore, { CustomFeatureCollection } from "../../zustandStore";
 import CrimePicker from "@/CrimePicker";
 
 export default function HomeScreen() {
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  console.log(location);
   const { geoData, crimeCounts } = useStore();
 
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
@@ -34,6 +38,19 @@ export default function HomeScreen() {
     })),
   };
 
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
   return (
     <View style={styles.container}>
       {geoData.length > 0 && (
@@ -48,6 +65,22 @@ export default function HomeScreen() {
             zoomLevel={12}
           />
 
+          {location && (
+            <Mapbox.PointAnnotation
+              key="userLocation"
+              id="userLocation"
+              coordinate={[
+                location?.coords?.longitude,
+                location?.coords?.latitude,
+              ]}
+            >
+              {/* <Mapbox.Callout title="You are here!" /> */}
+              <View
+                style={{ height: 200, width: 200, backgroundColor: "blue" }}
+              ></View>
+              {/* Replace with your custom arrow icon */}
+            </Mapbox.PointAnnotation>
+          )}
           <Mapbox.ShapeSource id="areaSource" shape={geojson}>
             <Mapbox.FillLayer
               id="areaFill"
