@@ -9,7 +9,6 @@ import CrimePicker from "@/CrimePicker";
 export default function HomeScreen() {
   const { geoData, crimeCounts } = useStore();
 
-  // console.log(geoData, "teh geoData");
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
   const mapRef = useRef(null);
 
@@ -18,11 +17,15 @@ export default function HomeScreen() {
     acc[cuadranteKey] = curr[cuadranteKey]; // Map cuadrante to its count
     return acc;
   }, {} as Record<string, number>);
+
   const geojson: CustomFeatureCollection = {
     type: "FeatureCollection",
     features: geoData.map((item) => ({
       type: "Feature",
-      geometry: item.geometry,
+      geometry: {
+        type: "Polygon", // Explicitly set geometry type as "Polygon"
+        coordinates: item.geometry.coordinates, // Assume coordinates match expected format
+      },
       properties: {
         cuadrante: item.properties.cuadrante,
         sector: item.properties.sector,
@@ -46,7 +49,6 @@ export default function HomeScreen() {
           />
 
           <Mapbox.ShapeSource id="areaSource" shape={geojson}>
-            {/* FillLayer to display polygons with crime counts */}
             <Mapbox.FillLayer
               id="areaFill"
               style={{
@@ -54,9 +56,9 @@ export default function HomeScreen() {
                   "case",
                   ["<", ["get", "crimeCount"], 0],
                   "rgba(255, 0, 0, 0.2)", // Low count
-                  ["<", ["get", "crimeCount"], 1],
-                  "rgba(255, 0, 0, 0.5)", // Medium count
                   ["<", ["get", "crimeCount"], 3],
+                  "rgba(255, 0, 0, 0.5)", // Medium count
+                  ["<", ["get", "crimeCount"], 5],
                   "rgba(255, 0, 0, 0.7)", // High count
                   "rgba(255, 0, 0, 1)", // Very high count
                 ],
@@ -74,7 +76,8 @@ export default function HomeScreen() {
           </Mapbox.ShapeSource>
         </Mapbox.MapView>
       )}
-      <CrimePicker />
+
+      {/* <CrimePicker /> */}
     </View>
   );
 }

@@ -17,7 +17,7 @@ import { fetchCrimeCounts } from "@/helpers";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const { setGeoData, setCrimeCounts } = useStore();
+  const { setGeoData, setCrimeCounts, geoData } = useStore();
   const colorScheme = useColorScheme();
 
   const [loaded] = useFonts({
@@ -31,7 +31,7 @@ export default function RootLayout() {
         const localGeoData = cuadrantesData?.features.slice(0, 800);
         setGeoData(localGeoData);
 
-        const counts = await fetchCrimeCounts("ROBO A NEGOCIO C.V.");
+        const counts = await fetchCrimeCounts("HOMICIDIO DOLOSO", geoData);
         setCrimeCounts(counts);
       } catch (error) {
         console.error("Error fetching CSV:", error);

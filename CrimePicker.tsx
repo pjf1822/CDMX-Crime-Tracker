@@ -6,7 +6,8 @@ import useStore from "./zustandStore";
 import { fetchCrimeCounts } from "./helpers";
 
 const CrimePicker = () => {
-  const { selectedCrime, setSelectedCrime, setCrimeCounts } = useStore();
+  const { selectedCrime, setSelectedCrime, setCrimeCounts, geoData } =
+    useStore();
 
   const handleCrimeChange = async (itemValue: string) => {
     const crimeType = itemValue as CrimeTypes; // Ensure correct type
@@ -14,7 +15,7 @@ const CrimePicker = () => {
     setSelectedCrime(crimeType);
 
     // Fetch crime counts based on the selected crime type
-    const crimeCounts = await fetchCrimeCounts(crimeType);
+    const crimeCounts = await fetchCrimeCounts(crimeType, geoData);
     setCrimeCounts(crimeCounts);
   };
 
