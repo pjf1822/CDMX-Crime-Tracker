@@ -92,7 +92,7 @@ const useStore = create<StoreState>((set) => ({
   setGeoData: (data) => set({ geoData: data }),
   crimeCounts: [],
   setCrimeCounts: (counts) => set({ crimeCounts: counts }),
-  selectedCrime: CrimeTypes.HOMICIDIO_DOLOSO, // Initialize with a default enum value
+  selectedCrime: CrimeTypes.HOMICIDIO_DOLOSO,
   setSelectedCrime: (crime) => set({ selectedCrime: crime }),
 }));
 export default useStore;

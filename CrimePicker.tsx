@@ -1,6 +1,5 @@
 import { Picker } from "@react-native-picker/picker";
-import { View, Text, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { CrimeTypes } from "./zustandStore";
 import useStore from "./zustandStore";
 import { fetchCrimeCounts } from "./helpers";
@@ -14,9 +13,7 @@ const CrimePicker = () => {
 
     setSelectedCrime(crimeType);
 
-    // Fetch crime counts based on the selected crime type
-    const crimeCounts = await fetchCrimeCounts(crimeType, geoData);
-    setCrimeCounts(crimeCounts);
+    await fetchCrimeCounts(crimeType, geoData, setCrimeCounts);
   };
 
   return (
@@ -51,7 +48,6 @@ const styles = StyleSheet.create({
   picker: {
     height: 150,
     width: 400,
-    // backgroundColor: "green",
   },
 });
 

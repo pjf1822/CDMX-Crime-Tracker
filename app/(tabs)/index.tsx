@@ -26,14 +26,14 @@ export default function HomeScreen() {
     features: geoData.map((item) => ({
       type: "Feature",
       geometry: {
-        type: "Polygon", // Explicitly set geometry type as "Polygon"
-        coordinates: item.geometry.coordinates, // Assume coordinates match expected format
+        type: "Polygon",
+        coordinates: item.geometry.coordinates,
       },
       properties: {
         cuadrante: item.properties.cuadrante,
         sector: item.properties.sector,
         crimeCount: crimeCountsLookup[item.properties.cuadrante] || 0,
-        alcaldia: item.properties.alcaldia, // Use the lookup object
+        alcaldia: item.properties.alcaldia,
       },
     })),
   };
