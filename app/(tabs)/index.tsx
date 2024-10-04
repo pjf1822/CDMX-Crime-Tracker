@@ -1,12 +1,15 @@
 import { Image, StyleSheet, Platform, View } from "react-native";
-
+import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "@env";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useStore, { CustomFeatureCollection } from "../../zustandStore";
 import CrimePicker from "@/CrimePicker";
 
 export default function HomeScreen() {
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
   const { geoData, crimeCounts } = useStore();
 
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
@@ -29,10 +32,24 @@ export default function HomeScreen() {
       properties: {
         cuadrante: item.properties.cuadrante,
         sector: item.properties.sector,
-        crimeCount: crimeCountsLookup[item.properties.cuadrante] || 0, // Use the lookup object
+        crimeCount: crimeCountsLookup[item.properties.cuadrante] || 0,
+        alcaldia: item.properties.alcaldia, // Use the lookup object
       },
     })),
   };
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -48,6 +65,21 @@ export default function HomeScreen() {
             zoomLevel={12}
           />
 
+          {location && (
+            <Mapbox.PointAnnotation
+              key="userLocation"
+              id="userLocation"
+              coordinate={[
+                location?.coords?.longitude,
+                location?.coords?.latitude,
+              ]}
+            >
+              {/* <Mapbox.Callout title="You are here!" /> */}
+              <View
+                style={{ height: 200, width: 200, backgroundColor: "blue" }}
+              ></View>
+            </Mapbox.PointAnnotation>
+          )}
           <Mapbox.ShapeSource id="areaSource" shape={geojson}>
             <Mapbox.FillLayer
               id="areaFill"
@@ -55,11 +87,11 @@ export default function HomeScreen() {
                 fillColor: [
                   "case",
                   ["<", ["get", "crimeCount"], 0],
-                  "rgba(255, 0, 0, 0.2)", // Low count
-                  ["<", ["get", "crimeCount"], 3],
-                  "rgba(255, 0, 0, 0.5)", // Medium count
-                  ["<", ["get", "crimeCount"], 5],
-                  "rgba(255, 0, 0, 0.7)", // High count
+                  "rgba(214, 228, 179, 0.2)", // Low count
+                  ["<", ["get", "crimeCount"], 1],
+                  "rgba(191, 206, 142, 0.5)", // Medium count
+                  ["<", ["get", "crimeCount"], 2],
+                  "rgba(159, 172, 114, 1)", // High count
                   "rgba(255, 0, 0, 1)", // Very high count
                 ],
                 fillOpacity: 1,
