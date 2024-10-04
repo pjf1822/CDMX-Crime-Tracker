@@ -3,7 +3,7 @@ import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "@env";
 import { useEffect, useRef, useState } from "react";
-import useStore, { CustomFeatureCollection } from "../../zustandStore";
+import useStore, { CustomFeatureCollection } from "../zustandStore";
 import CrimePicker from "@/CrimePicker";
 import CrimeStatsBox from "@/components/CrimeStatsBox";
 
@@ -53,18 +53,25 @@ export default function HomeScreen() {
     })();
   }, []);
 
+  const mexicoCityBounds = {
+    ne: [-98.9, 19.7], // NE corner (longitude, latitude)
+    sw: [-99.6, 18.8], // SW corner (longitude, latitude)
+  };
+
   return (
     <View style={styles.container}>
       {geoData.length > 0 && (
         <Mapbox.MapView
-          projection="globe"
+          projection="mercator"
           styleURL="mapbox://styles/pjf1822/cm1aovsic00vq01pcbyo39gsz"
           style={styles.map}
           ref={mapRef}
+          scaleBarEnabled={false}
         >
           <Mapbox.Camera
             centerCoordinate={[-99.1332, 19.4326]}
             zoomLevel={12}
+            maxBounds={mexicoCityBounds} // Restrict the camera to Mexico City
           />
 
           {location && (
@@ -112,13 +119,13 @@ export default function HomeScreen() {
                   "case",
                   ["==", ["get", "cuadrante"], selectedCuadrante],
                   "green", // Outline color for selected cuadrante
-                  "black", // Default outline color
+                  "red", // Default outline color
                 ],
                 lineWidth: [
                   "case",
                   ["==", ["get", "cuadrante"], selectedCuadrante],
                   5,
-                  2,
+                  0,
                 ],
                 lineOpacity: 1,
               }}

@@ -44,14 +44,15 @@ const CrimePicker = () => {
       style={{
         zIndex: 999,
         position: "absolute",
-        backgroundColor: "white",
+        backgroundColor: "#2E5A43",
         left: 0,
         bottom: 0,
         flex: 1,
-        padding: 30,
-        maxHeight: 100,
-        maxWidth: 600,
+        height: 120,
+        width: "100%",
+        display: "flex",
         justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Picker
@@ -64,6 +65,7 @@ const CrimePicker = () => {
             key={crime}
             label={crimeLabelMap[crime]} // Use the mapping for the label
             value={crime}
+            color="#D6ED31"
           />
         ))}
       </Picker>
@@ -73,8 +75,11 @@ const CrimePicker = () => {
 
 const styles = StyleSheet.create({
   picker: {
-    height: 150,
+    height: 120,
     width: 400,
+    // backgroundColor: "red",
+    justifyContent: "center",
+    overflow: "hidden",
   },
 });
 
