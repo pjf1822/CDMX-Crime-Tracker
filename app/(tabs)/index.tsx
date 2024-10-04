@@ -5,12 +5,14 @@ import { MAPBOX_ACCESS_TOKEN } from "@env";
 import { useEffect, useRef, useState } from "react";
 import useStore, { CustomFeatureCollection } from "../../zustandStore";
 import CrimePicker from "@/CrimePicker";
+import CrimeStatsBox from "@/components/CrimeStatsBox";
 
 export default function HomeScreen() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  const { geoData, crimeCounts } = useStore();
+  const { geoData, crimeCounts, setSelectedCuadrante, selectedCuadrante } =
+    useStore();
 
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
   const mapRef = useRef(null);
@@ -80,7 +82,13 @@ export default function HomeScreen() {
               ></View>
             </Mapbox.PointAnnotation>
           )}
-          <Mapbox.ShapeSource id="areaSource" shape={geojson}>
+          <Mapbox.ShapeSource
+            id="areaSource"
+            shape={geojson}
+            onPress={(event) =>
+              setSelectedCuadrante(event?.features[0]?.properties?.cuadrante)
+            }
+          >
             <Mapbox.FillLayer
               id="areaFill"
               style={{
@@ -100,15 +108,25 @@ export default function HomeScreen() {
             <Mapbox.LineLayer
               id="areaOutline"
               style={{
-                lineColor: "black",
-                lineWidth: 3,
+                lineColor: [
+                  "case",
+                  ["==", ["get", "cuadrante"], selectedCuadrante],
+                  "green", // Outline color for selected cuadrante
+                  "black", // Default outline color
+                ],
+                lineWidth: [
+                  "case",
+                  ["==", ["get", "cuadrante"], selectedCuadrante],
+                  5,
+                  2,
+                ],
                 lineOpacity: 1,
               }}
             />
           </Mapbox.ShapeSource>
         </Mapbox.MapView>
       )}
-
+      <CrimeStatsBox />
       <CrimePicker />
     </View>
   );

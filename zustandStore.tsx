@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import {
   FeatureCollection,
   Feature,
@@ -81,10 +82,12 @@ export interface CustomFeatureCollection
 interface StoreState {
   geoData: GeoJSONFeature[];
   setGeoData: (data: GeoJSONFeature[]) => void;
-  crimeCounts: Array<Record<string, number>>; // Array of objects with cuadrante and count
+  crimeCounts: Array<Record<string, number>>;
   setCrimeCounts: (counts: Array<Record<string, number>>) => void;
-  selectedCrime: CrimeTypes; // Use CrimeTypes
+  selectedCrime: CrimeTypes;
   setSelectedCrime: (crime: CrimeTypes) => void;
+  selectedCuadrante: string;
+  setSelectedCuadrante: (cuadrante: string) => void;
 }
 
 const useStore = create<StoreState>((set) => ({
@@ -94,5 +97,7 @@ const useStore = create<StoreState>((set) => ({
   setCrimeCounts: (counts) => set({ crimeCounts: counts }),
   selectedCrime: CrimeTypes.HOMICIDIO_DOLOSO,
   setSelectedCrime: (crime) => set({ selectedCrime: crime }),
+  selectedCuadrante: "C-1.4.11",
+  setSelectedCuadrante: (cuadrante) => set({ selectedCuadrante: cuadrante }),
 }));
 export default useStore;

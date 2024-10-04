@@ -27,7 +27,7 @@ export default function RootLayout() {
     async function loadResourcesAndDataAsync() {
       try {
         await SplashScreen.hideAsync();
-        const localGeoData = cuadrantesData?.features.slice(0, 300);
+        const localGeoData = cuadrantesData?.features;
         setGeoData(localGeoData);
         await fetchCrimeCounts(
           "HOMICIDIO DOLOSO",
