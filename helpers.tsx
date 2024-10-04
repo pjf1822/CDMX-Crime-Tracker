@@ -9,7 +9,8 @@ export const fetchCrimeData = async (
 
 export const fetchCrimeCounts = async (
   crimeType: string,
-  geoData: GeoDataItem[]
+  geoData: GeoDataItem[],
+  setCrimeCounts: React.Dispatch<React.SetStateAction<any>>
 ) => {
   const crimeCountsArray = [];
   let totalCount = 0;
@@ -27,7 +28,7 @@ export const fetchCrimeCounts = async (
   }
   // console.log(totalCount / validCountEntries);
 
-  return crimeCountsArray;
+  setCrimeCounts(crimeCountsArray);
 };
 
 // const filePath = FileSystem.documentDirectory + "crimeData.json";

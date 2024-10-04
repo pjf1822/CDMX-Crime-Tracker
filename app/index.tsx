@@ -3,14 +3,16 @@ import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "@env";
 import { useEffect, useRef, useState } from "react";
-import useStore, { CustomFeatureCollection } from "../../zustandStore";
+import useStore, { CustomFeatureCollection } from "../zustandStore";
 import CrimePicker from "@/CrimePicker";
+import CrimeStatsBox from "@/components/CrimeStatsBox";
 
 export default function HomeScreen() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  const { geoData, crimeCounts } = useStore();
+  const { geoData, crimeCounts, setSelectedCuadrante, selectedCuadrante } =
+    useStore();
 
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
   const mapRef = useRef(null);
@@ -26,14 +28,14 @@ export default function HomeScreen() {
     features: geoData.map((item) => ({
       type: "Feature",
       geometry: {
-        type: "Polygon", // Explicitly set geometry type as "Polygon"
-        coordinates: item.geometry.coordinates, // Assume coordinates match expected format
+        type: "Polygon",
+        coordinates: item.geometry.coordinates,
       },
       properties: {
         cuadrante: item.properties.cuadrante,
         sector: item.properties.sector,
         crimeCount: crimeCountsLookup[item.properties.cuadrante] || 0,
-        alcaldia: item.properties.alcaldia, // Use the lookup object
+        alcaldia: item.properties.alcaldia,
       },
     })),
   };
@@ -51,18 +53,25 @@ export default function HomeScreen() {
     })();
   }, []);
 
+  const mexicoCityBounds = {
+    ne: [-98.9, 19.7], // NE corner (longitude, latitude)
+    sw: [-99.6, 18.8], // SW corner (longitude, latitude)
+  };
+
   return (
     <View style={styles.container}>
       {geoData.length > 0 && (
         <Mapbox.MapView
-          projection="globe"
+          projection="mercator"
           styleURL="mapbox://styles/pjf1822/cm1aovsic00vq01pcbyo39gsz"
           style={styles.map}
           ref={mapRef}
+          scaleBarEnabled={false}
         >
           <Mapbox.Camera
             centerCoordinate={[-99.1332, 19.4326]}
             zoomLevel={12}
+            maxBounds={mexicoCityBounds} // Restrict the camera to Mexico City
           />
 
           {location && (
@@ -80,7 +89,13 @@ export default function HomeScreen() {
               ></View>
             </Mapbox.PointAnnotation>
           )}
-          <Mapbox.ShapeSource id="areaSource" shape={geojson}>
+          <Mapbox.ShapeSource
+            id="areaSource"
+            shape={geojson}
+            onPress={(event) =>
+              setSelectedCuadrante(event?.features[0]?.properties?.cuadrante)
+            }
+          >
             <Mapbox.FillLayer
               id="areaFill"
               style={{
@@ -100,15 +115,25 @@ export default function HomeScreen() {
             <Mapbox.LineLayer
               id="areaOutline"
               style={{
-                lineColor: "black",
-                lineWidth: 3,
+                lineColor: [
+                  "case",
+                  ["==", ["get", "cuadrante"], selectedCuadrante],
+                  "green", // Outline color for selected cuadrante
+                  "red", // Default outline color
+                ],
+                lineWidth: [
+                  "case",
+                  ["==", ["get", "cuadrante"], selectedCuadrante],
+                  5,
+                  0,
+                ],
                 lineOpacity: 1,
               }}
             />
           </Mapbox.ShapeSource>
         </Mapbox.MapView>
       )}
-
+      <CrimeStatsBox />
       <CrimePicker />
     </View>
   );
