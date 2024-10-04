@@ -13,7 +13,6 @@ import useStore from "../zustandStore";
 import cuadrantesData from "../GeoJSONData.json";
 import { fetchCrimeCounts } from "@/helpers";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -28,10 +27,9 @@ export default function RootLayout() {
     async function loadResourcesAndDataAsync() {
       try {
         await SplashScreen.hideAsync();
-        const localGeoData = cuadrantesData?.features.slice(0, 800);
+        const localGeoData = cuadrantesData?.features.slice(0, 3);
         setGeoData(localGeoData);
-
-        const counts = await fetchCrimeCounts("HOMICIDIO DOLOSO", geoData);
+        const counts = await fetchCrimeCounts("HOMICIDIO DOLOSO", localGeoData);
         setCrimeCounts(counts);
       } catch (error) {
         console.error("Error fetching CSV:", error);

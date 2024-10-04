@@ -10,7 +10,6 @@ export default function HomeScreen() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  console.log(location);
   const { geoData, crimeCounts } = useStore();
 
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
@@ -33,7 +32,8 @@ export default function HomeScreen() {
       properties: {
         cuadrante: item.properties.cuadrante,
         sector: item.properties.sector,
-        crimeCount: crimeCountsLookup[item.properties.cuadrante] || 0, // Use the lookup object
+        crimeCount: crimeCountsLookup[item.properties.cuadrante] || 0,
+        alcaldia: item.properties.alcaldia, // Use the lookup object
       },
     })),
   };
@@ -78,7 +78,6 @@ export default function HomeScreen() {
               <View
                 style={{ height: 200, width: 200, backgroundColor: "blue" }}
               ></View>
-              {/* Replace with your custom arrow icon */}
             </Mapbox.PointAnnotation>
           )}
           <Mapbox.ShapeSource id="areaSource" shape={geojson}>
@@ -88,11 +87,11 @@ export default function HomeScreen() {
                 fillColor: [
                   "case",
                   ["<", ["get", "crimeCount"], 0],
-                  "rgba(255, 0, 0, 0.2)", // Low count
-                  ["<", ["get", "crimeCount"], 3],
-                  "rgba(255, 0, 0, 0.5)", // Medium count
-                  ["<", ["get", "crimeCount"], 5],
-                  "rgba(255, 0, 0, 0.7)", // High count
+                  "rgba(214, 228, 179, 0.2)", // Low count
+                  ["<", ["get", "crimeCount"], 1],
+                  "rgba(191, 206, 142, 0.5)", // Medium count
+                  ["<", ["get", "crimeCount"], 2],
+                  "rgba(159, 172, 114, 1)", // High count
                   "rgba(255, 0, 0, 1)", // Very high count
                 ],
                 fillOpacity: 1,
