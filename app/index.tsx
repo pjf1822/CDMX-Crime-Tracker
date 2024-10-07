@@ -111,20 +111,20 @@ export default function HomeScreen() {
                     ["get", "crimeCount"],
                     crimeThresholds[selectedCrime]?.low || 2,
                   ],
-                  "rgba(255, 0, 0, 0.0)", // Low count color (light red)
+                  "rgba(255, 111,97, 0.0)", // Low count color (light red)
                   [
                     "<",
                     ["get", "crimeCount"],
                     crimeThresholds[selectedCrime]?.medium || 5,
                   ],
-                  "rgba(255, 0, 0, 0.3)", // Medium count color (medium red)
+                  "rgba(255, 111,97, 0.3)", // Medium count color (medium red)
                   [
                     "<",
                     ["get", "crimeCount"],
                     crimeThresholds[selectedCrime]?.high || 8,
                   ],
-                  "rgba(255, 0, 0, 0.6)", // High count color (dark red)
-                  "rgba(255, 0, 0, 0.8)", // Very high count color (full red)
+                  "rgba(255, 111,97, 0.6)", // High count color (dark red)
+                  "rgba(255, 111,97, 0.8)", // Very high count color (full red)
                 ],
                 fillOpacity: 1,
               }}
