@@ -1,0 +1,48 @@
+import { CrimeTypes } from "./zustandStore";
+
+export const crimeThresholds = {
+  [CrimeTypes.HOMICIDIO_DOLOSO]: { low: 1, medium: 2, high: 5 },
+  [CrimeTypes.LESIONES_POR_ARMA_DE_FUEGO]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.ROBO_A_BORDO_DE_METRO_CV]: { low: 1, medium: 2, high: 5 },
+  [CrimeTypes.ROBO_A_BORDO_DE_METRO_SV]: { low: 1, medium: 5, high: 10 },
+  [CrimeTypes.ROBO_A_BORDO_DE_MICROBUS_CV]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.ROBO_A_BORDO_DE_MICROBUS_SV]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.ROBO_A_BORDO_DE_TAXI_CV]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.ROBO_A_CASA_HABITACION_CV]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.ROBO_A_CUENTAHABIENTE_CV]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.ROBO_A_NEGOCIO_CV]: { low: 2, medium: 4, high: 7 },
+  [CrimeTypes.ROBO_A_REPARTIDOR_CV]: { low: 1, medium: 3, high: 5 },
+  [CrimeTypes.ROBO_A_REPARTIDOR_SV]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.ROBO_A_TRANSEUNTE_CV]: { low: 3, medium: 6, high: 10 },
+  [CrimeTypes.ROBO_A_TRANSEUNTE_SV]: { low: 0, medium: 2, high: 4 },
+  [CrimeTypes.ROBO_A_TRANSPORTISTA_CV]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.ROBO_A_TRANSPORTISTA_SV]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.ROBO_DE_VEHICULO_AUTOMOTOR_CV]: { low: 1, medium: 3, high: 5 },
+  [CrimeTypes.ROBO_DE_VEHICULO_AUTOMOTOR_SV]: { low: 2, medium: 4, high: 7 },
+  [CrimeTypes.SECUESTRO]: { low: 1, medium: 2, high: 3 },
+  [CrimeTypes.VIOLACION]: { low: 1, medium: 4, high: 7 },
+  // Add other crime types with their respective thresholds here
+};
+
+export const crimeDataStart = {
+  "HOMICIDIO DOLOSO": 0,
+  "LESIONES POR ARMA DE FUEGO": 0,
+  "ROBO A BORDO DE METRO C.V.": 0,
+  "ROBO A BORDO DE METRO S.V.": 0,
+  "ROBO A BORDO DE MICROBUS C.V.": 0,
+  "ROBO A BORDO DE MICROBUS S.V.": 0,
+  "ROBO A BORDO DE TAXI C.V.": 0,
+  "ROBO A CASA HABITACION C.V.": 0,
+  "ROBO A CUENTAHABIENTE C.V.": 0,
+  "ROBO A NEGOCIO C.V.": 0,
+  "ROBO A REPARTIDOR C.V.": 0,
+  "ROBO A REPARTIDOR S.V.": 0,
+  "ROBO A TRANSEUNTE C.V.": 0,
+  "ROBO A TRANSEUNTE S.V.": 0,
+  "ROBO A TRANSPORTISTA C.V.": 0,
+  "ROBO A TRANSPORTISTA S.V.": 0,
+  "ROBO DE VEHICULO AUTOMOTOR C.V.": 0,
+  "ROBO DE VEHICULO AUTOMOTOR S.V.": 0,
+  SECUESTRO: 0,
+  VIOLACION: 0,
+};
