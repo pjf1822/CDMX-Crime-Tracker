@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform, View } from "react-native";
+import { Image, Platform, StyleSheet, View } from "react-native";
 import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "@env";
@@ -6,13 +6,20 @@ import { useEffect, useRef, useState } from "react";
 import useStore, { CustomFeatureCollection } from "../zustandStore";
 import CrimePicker from "@/CrimePicker";
 import CrimeStatsBox from "@/components/CrimeStatsBox";
+import { myColors } from "@/theme";
+import { crimeThresholds } from "@/constants";
 
 export default function HomeScreen() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  const { geoData, crimeCounts, setSelectedCuadrante, selectedCuadrante } =
-    useStore();
+  const {
+    geoData,
+    crimeCounts,
+    setSelectedCuadrante,
+    selectedCuadrante,
+    selectedCrime,
+  } = useStore();
 
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
   const mapRef = useRef(null);
@@ -53,11 +60,6 @@ export default function HomeScreen() {
     })();
   }, []);
 
-  const mexicoCityBounds = {
-    ne: [-98.9, 19.7], // NE corner (longitude, latitude)
-    sw: [-99.6, 18.8], // SW corner (longitude, latitude)
-  };
-
   return (
     <View style={styles.container}>
       {geoData.length > 0 && (
@@ -71,7 +73,10 @@ export default function HomeScreen() {
           <Mapbox.Camera
             centerCoordinate={[-99.1332, 19.4326]}
             zoomLevel={12}
-            maxBounds={mexicoCityBounds} // Restrict the camera to Mexico City
+            maxBounds={{
+              ne: [-98.9, 19.7],
+              sw: [-99.6, 18.8],
+            }}
           />
 
           {location && (
@@ -101,13 +106,25 @@ export default function HomeScreen() {
               style={{
                 fillColor: [
                   "case",
-                  ["<", ["get", "crimeCount"], 0],
-                  "rgba(214, 228, 179, 0.2)", // Low count
-                  ["<", ["get", "crimeCount"], 1],
-                  "rgba(191, 206, 142, 0.5)", // Medium count
-                  ["<", ["get", "crimeCount"], 2],
-                  "rgba(159, 172, 114, 1)", // High count
-                  "rgba(255, 0, 0, 1)", // Very high count
+                  [
+                    "<",
+                    ["get", "crimeCount"],
+                    crimeThresholds[selectedCrime]?.low || 2,
+                  ],
+                  "rgba(255, 0, 0, 0.0)", // Low count color (light red)
+                  [
+                    "<",
+                    ["get", "crimeCount"],
+                    crimeThresholds[selectedCrime]?.medium || 5,
+                  ],
+                  "rgba(255, 0, 0, 0.3)", // Medium count color (medium red)
+                  [
+                    "<",
+                    ["get", "crimeCount"],
+                    crimeThresholds[selectedCrime]?.high || 8,
+                  ],
+                  "rgba(255, 0, 0, 0.6)", // High count color (dark red)
+                  "rgba(255, 0, 0, 0.8)", // Very high count color (full red)
                 ],
                 fillOpacity: 1,
               }}
@@ -118,8 +135,8 @@ export default function HomeScreen() {
                 lineColor: [
                   "case",
                   ["==", ["get", "cuadrante"], selectedCuadrante],
-                  "green", // Outline color for selected cuadrante
-                  "red", // Default outline color
+                  myColors.beige, // Outline color for selected cuadrante
+                  "transparent", // Default outline color
                 ],
                 lineWidth: [
                   "case",
@@ -134,6 +151,19 @@ export default function HomeScreen() {
         </Mapbox.MapView>
       )}
       <CrimeStatsBox />
+      <Image
+        source={require("../assets/logo2.png")}
+        style={{
+          height: Platform.isPad ? 200 : 100,
+          width: Platform.isPad ? 200 : 100,
+          position: "absolute",
+          top: Platform.isPad ? 0 : 20,
+          left: 10,
+          zIndex: 999,
+          backgroundColor: Platform.isPad ? "transparent" : myColors.beige,
+          borderRadius: 20,
+        }}
+      />
       <CrimePicker />
     </View>
   );

@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import useStore from "../zustandStore";
-import cuadrantesData from "../GeoJSONData.json";
+import cuadrantesData from "../assets/GeoJSONData.json";
 import { fetchCrimeCounts } from "@/helpers";
 
 SplashScreen.preventAutoHideAsync();
@@ -48,11 +48,8 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+    </Stack>
   );
 }

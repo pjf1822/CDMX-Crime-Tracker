@@ -1,32 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import useStore from "../zustandStore";
 import crimeData from "../assets/crimeData.json"; // Adjust the import path
 import { myColors } from "../theme";
+import { crimeDataStart } from "@/constants";
 const CrimeStatsBox = () => {
   const { selectedCuadrante } = useStore();
-  const [filteredCrimeData, setFilteredCrimeData] = useState({
-    "HOMICIDIO DOLOSO": 0,
-    "LESIONES POR ARMA DE FUEGO": 0,
-    "ROBO A BORDO DE METRO C.V.": 0,
-    "ROBO A BORDO DE METRO S.V.": 0,
-    "ROBO A BORDO DE MICROBUS C.V.": 0,
-    "ROBO A BORDO DE MICROBUS S.V.": 0,
-    "ROBO A BORDO DE TAXI C.V.": 0,
-    "ROBO A CASA HABITACION C.V.": 0,
-    "ROBO A CUENTAHABIENTE C.V.": 0,
-    "ROBO A NEGOCIO C.V.": 0,
-    "ROBO A REPARTIDOR C.V.": 0,
-    "ROBO A REPARTIDOR S.V.": 0,
-    "ROBO A TRANSEUNTE C.V.": 0,
-    "ROBO A TRANSEUNTE S.V.": 0,
-    "ROBO A TRANSPORTISTA C.V.": 0,
-    "ROBO A TRANSPORTISTA S.V.": 0,
-    "ROBO DE VEHICULO AUTOMOTOR C.V.": 0,
-    "ROBO DE VEHICULO AUTOMOTOR S.V.": 0,
-    SECUESTRO: 0,
-    VIOLACION: 0,
-  });
+  const [filteredCrimeData, setFilteredCrimeData] = useState(crimeDataStart);
 
   useEffect(() => {
     const matchedCrimes = crimeData.filter(
@@ -34,7 +14,7 @@ const CrimeStatsBox = () => {
     );
 
     const stats = matchedCrimes?.reduce((acc, crime) => {
-      acc[crime.crime] = crime.count; // Set the crime type as key and count as value
+      acc[crime.crime] = crime.count;
       return acc;
     }, {});
 
@@ -82,6 +62,9 @@ const CrimeStatsBox = () => {
           </Text>
         </View>
       </View>
+      <Text style={{ flexWrap: "wrap", fontSize: 10 }}>
+        *all data is from the last twelve months
+      </Text>
     </View>
   );
 };
@@ -95,10 +78,13 @@ const styles = StyleSheet.create({
     top: 0,
     flex: 1,
     padding: 10,
+    marginTop: 50,
     justifyContent: "center",
+    // alignItems: "flex-end",
+    borderRadius: 10,
   },
   cuadranteText: {
-    fontSize: 18,
+    fontSize: Platform.isPad ? 18 : 14,
     fontWeight: "bold",
     color: "#fff",
     marginBottom: 10,
@@ -113,7 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   labelText: {
-    fontSize: 16,
+    fontSize: Platform.isPad ? 16 : 12,
     fontWeight: "600",
     color: "#fff",
   },

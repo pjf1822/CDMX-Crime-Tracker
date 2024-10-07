@@ -32,7 +32,7 @@ const CrimePicker = () => {
     useStore();
 
   const handleCrimeChange = async (itemValue: string) => {
-    const crimeType = itemValue as CrimeTypes; // Ensure correct type
+    const crimeType = itemValue as CrimeTypes;
 
     setSelectedCrime(crimeType);
 
@@ -48,10 +48,10 @@ const CrimePicker = () => {
         left: 0,
         bottom: 0,
         flex: 1,
-        height: 120,
+        height: 150,
         width: "100%",
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
       }}
     >

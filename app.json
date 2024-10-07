@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "CDMXCrimeTrack",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -14,14 +14,21 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pjf1822.CDMXCrimeTracker"
+      "bundleIdentifier": "com.pjf1822.CDMXCrimeTracker",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.pjf1822.CDMXCrimeTracker"
+      "package": "com.pjf1822.CDMXCrimeTracker",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -40,12 +47,17 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow CDMXCrimeTrack to use your location."
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e1e0c6c5-e4b3-4a97-88fd-e949c25d537d"
+      }
     }
   }
 }
