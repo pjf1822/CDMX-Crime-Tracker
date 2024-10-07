@@ -1,4 +1,11 @@
-import { Image, Platform, StyleSheet, View, Text } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "@env";
@@ -12,6 +19,7 @@ import { crimeThresholds } from "@/constants";
 export default function HomeScreen() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false); // State for map loading
 
   const {
     geoData,
@@ -60,6 +68,9 @@ export default function HomeScreen() {
     })();
   }, []);
 
+  if (!isMapLoaded) {
+    return <ActivityIndicator size="large" color={myColors.darkGreen} />;
+  }
   return (
     <View style={styles.container}>
       {geoData.length > 0 && (
@@ -69,6 +80,7 @@ export default function HomeScreen() {
           style={styles.map}
           ref={mapRef}
           scaleBarEnabled={false}
+          onDidFinishRenderingMapFully={() => setIsMapLoaded(true)}
         >
           <Mapbox.Camera
             centerCoordinate={[-99.1332, 19.4326]}
@@ -168,7 +180,7 @@ export default function HomeScreen() {
           height: Platform.isPad ? 200 : 100,
           width: Platform.isPad ? 200 : 100,
           position: "absolute",
-          top: Platform.isPad ? 0 : 20,
+          top: Platform.isPad ? 0 : 50,
           left: 10,
           zIndex: 999,
           backgroundColor: Platform.isPad ? "transparent" : myColors.beige,

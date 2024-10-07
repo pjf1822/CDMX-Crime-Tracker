@@ -9,14 +9,14 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint", 
+    "lint": "expo lint",
     "build-local": "dotenv -- eas build -p ios --local --profile production"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/vector-icons": "^14.0.2",
+    "@expo/vector-icons": "^14.0.4",
     "@react-native-picker/picker": "^2.7.5",
     "@react-navigation/native": "^6.0.2",
     "@rnmapbox/maps": "^10.1.31",
