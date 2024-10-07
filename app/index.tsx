@@ -1,4 +1,4 @@
-import { Image, Platform, StyleSheet, View } from "react-native";
+import { Image, Platform, StyleSheet, View, Text } from "react-native";
 import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "@env";
@@ -90,8 +90,19 @@ export default function HomeScreen() {
             >
               {/* <Mapbox.Callout title="You are here!" /> */}
               <View
-                style={{ height: 20, width: 20, backgroundColor: "blue" }}
-              ></View>
+                style={{
+                  height: 37,
+                  width: 37,
+                  backgroundColor: myColors.darkGreen,
+                  borderRadius: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderWidth: 4,
+                  borderColor: myColors.beige,
+                }}
+              >
+                <Text style={{ color: myColors.beige, fontSize: 13 }}>YOU</Text>
+              </View>
             </Mapbox.PointAnnotation>
           )}
           <Mapbox.ShapeSource
@@ -135,13 +146,13 @@ export default function HomeScreen() {
                 lineColor: [
                   "case",
                   ["==", ["get", "cuadrante"], selectedCuadrante],
-                  myColors.beige, // Outline color for selected cuadrante
+                  "rgba(214, 237, 49,0.75)", // Outline color for selected cuadrante
                   "transparent", // Default outline color
                 ],
                 lineWidth: [
                   "case",
                   ["==", ["get", "cuadrante"], selectedCuadrante],
-                  5,
+                  8,
                   0,
                 ],
                 lineOpacity: 1,
@@ -162,6 +173,8 @@ export default function HomeScreen() {
           zIndex: 999,
           backgroundColor: Platform.isPad ? "transparent" : myColors.beige,
           borderRadius: 20,
+          borderColor: myColors.darkGreen,
+          borderWidth: 2,
         }}
       />
       <CrimePicker />
