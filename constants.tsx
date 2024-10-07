@@ -45,4 +45,6 @@ export const crimeDataStart = {
   "ROBO DE VEHICULO AUTOMOTOR S.V.": 0,
   SECUESTRO: 0,
   VIOLACION: 0,
+  alcaldia: "",
+  sector: "",
 };

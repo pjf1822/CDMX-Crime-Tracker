@@ -1,4 +1,11 @@
-import { Image, Platform, StyleSheet, View } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "@env";
@@ -12,6 +19,7 @@ import { crimeThresholds } from "@/constants";
 export default function HomeScreen() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false); // State for map loading
 
   const {
     geoData,
@@ -60,6 +68,9 @@ export default function HomeScreen() {
     })();
   }, []);
 
+  if (!isMapLoaded) {
+    return <ActivityIndicator size="large" color={myColors.darkGreen} />;
+  }
   return (
     <View style={styles.container}>
       {geoData.length > 0 && (
@@ -69,6 +80,7 @@ export default function HomeScreen() {
           style={styles.map}
           ref={mapRef}
           scaleBarEnabled={false}
+          onDidFinishRenderingMapFully={() => setIsMapLoaded(true)}
         >
           <Mapbox.Camera
             centerCoordinate={[-99.1332, 19.4326]}
@@ -90,8 +102,19 @@ export default function HomeScreen() {
             >
               {/* <Mapbox.Callout title="You are here!" /> */}
               <View
-                style={{ height: 200, width: 200, backgroundColor: "blue" }}
-              ></View>
+                style={{
+                  height: 37,
+                  width: 37,
+                  backgroundColor: myColors.darkGreen,
+                  borderRadius: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderWidth: 4,
+                  borderColor: myColors.beige,
+                }}
+              >
+                <Text style={{ color: myColors.beige, fontSize: 13 }}>YOU</Text>
+              </View>
             </Mapbox.PointAnnotation>
           )}
           <Mapbox.ShapeSource
@@ -111,20 +134,20 @@ export default function HomeScreen() {
                     ["get", "crimeCount"],
                     crimeThresholds[selectedCrime]?.low || 2,
                   ],
-                  "rgba(255, 111,97, 0.0)", // Low count color (light red)
+                  "rgba(178,34,34 , 0.0)", // Low count color (light red)
                   [
                     "<",
                     ["get", "crimeCount"],
                     crimeThresholds[selectedCrime]?.medium || 5,
                   ],
-                  "rgba(255, 111,97, 0.3)", // Medium count color (medium red)
+                  "rgba(178,34,34 , 0.3)", // Medium count color (medium red)
                   [
                     "<",
                     ["get", "crimeCount"],
                     crimeThresholds[selectedCrime]?.high || 8,
                   ],
-                  "rgba(255, 111,97, 0.6)", // High count color (dark red)
-                  "rgba(255, 111,97, 0.8)", // Very high count color (full red)
+                  "rgba(178,34,34 , 0.6)", // High count color (dark red)
+                  "rgba(178,34,34 , 0.8)", // Very high count color (full red)
                 ],
                 fillOpacity: 1,
               }}
@@ -135,13 +158,13 @@ export default function HomeScreen() {
                 lineColor: [
                   "case",
                   ["==", ["get", "cuadrante"], selectedCuadrante],
-                  myColors.beige, // Outline color for selected cuadrante
+                  "rgba(214, 237, 49,0.75)", // Outline color for selected cuadrante
                   "transparent", // Default outline color
                 ],
                 lineWidth: [
                   "case",
                   ["==", ["get", "cuadrante"], selectedCuadrante],
-                  5,
+                  8,
                   0,
                 ],
                 lineOpacity: 1,
@@ -157,11 +180,13 @@ export default function HomeScreen() {
           height: Platform.isPad ? 200 : 100,
           width: Platform.isPad ? 200 : 100,
           position: "absolute",
-          top: Platform.isPad ? 0 : 20,
+          top: Platform.isPad ? 0 : 50,
           left: 10,
           zIndex: 999,
           backgroundColor: Platform.isPad ? "transparent" : myColors.beige,
           borderRadius: 20,
+          borderColor: myColors.darkGreen,
+          borderWidth: 2,
         }}
       />
       <CrimePicker />
