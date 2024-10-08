@@ -1,14 +1,8 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import useStore from "../zustandStore";
 import cuadrantesData from "../assets/GeoJSONData.json";
 import { fetchCrimeCounts } from "@/helpers";
@@ -17,10 +11,13 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const { setGeoData, setCrimeCounts } = useStore();
-  const colorScheme = useColorScheme();
 
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    OverPassBlack: require("../assets/fonts/Overpass-Black.ttf"),
+    OverPassBold: require("../assets/fonts/Overpass-Bold.ttf"),
+    OverPassRegular: require("../assets/fonts/Overpass-Regular.ttf"),
+    OverPassMedium: require("../assets/fonts/Overpass-Medium.ttf"),
+    OverPassThin: require("../assets/fonts/Overpass-Thin.ttf"),
   });
 
   useEffect(() => {

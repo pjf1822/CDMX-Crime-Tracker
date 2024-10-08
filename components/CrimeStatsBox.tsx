@@ -63,7 +63,9 @@ const CrimeStatsBox = () => {
           >
             <Ionicons name="close" size={32} color={myColors.beige} />
           </TouchableOpacity>
-          <Text style={styles.cuadranteText}>{filteredCrimeData.alcaldia}</Text>
+          <Text style={styles.cuadranteText}>
+            {filteredCrimeData.alcaldia},
+          </Text>
           <Text style={styles.cuadranteText}>{filteredCrimeData.sector}</Text>
           <View style={styles.column}>
             <View style={styles.row}>
@@ -117,10 +119,10 @@ const styles = StyleSheet.create({
     zIndex: 999,
     position: "absolute",
     backgroundColor: myColors.darkGreen,
-    right: 0,
-    top: 0,
+    right: 10,
+    top: 50,
     flex: 1,
-    marginTop: 50,
+
     justifyContent: "center",
     // alignItems: "flex-end",
     borderRadius: 10,
@@ -130,13 +132,14 @@ const styles = StyleSheet.create({
   },
   cuadranteText: {
     fontSize: Platform.isPad ? 18 : 12,
-    fontWeight: "bold",
     color: "#fff",
-    marginBottom: 10,
+    marginBottom: 3,
+    fontFamily: "OverPassMedium",
   },
   column: {
     display: "flex",
     flexDirection: "column",
+    marginTop: 4,
   },
   row: {
     display: "flex",
@@ -146,10 +149,12 @@ const styles = StyleSheet.create({
   labelText: {
     fontSize: Platform.isPad ? 16 : 12,
     color: "#fff",
+    fontFamily: "OverPassMedium",
   },
   valueText: {
     fontSize: Platform.isPad ? 16 : 12,
-    color: "#D6ED31", // You can customize the color
+    color: "#D6ED31",
+    fontFamily: "OverPassMedium",
   },
 });
 

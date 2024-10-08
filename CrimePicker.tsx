@@ -66,6 +66,7 @@ const CrimePicker = () => {
             label={crimeLabelMap[crime]} // Use the mapping for the label
             value={crime}
             color="#D6ED31"
+            fontFamily="OverPassThin"
           />
         ))}
       </Picker>
@@ -77,9 +78,9 @@ const styles = StyleSheet.create({
   picker: {
     height: 120,
     width: 400,
-    // backgroundColor: "red",
     justifyContent: "center",
     overflow: "hidden",
+    fontFamily: "OverPassBold",
   },
 });
 
