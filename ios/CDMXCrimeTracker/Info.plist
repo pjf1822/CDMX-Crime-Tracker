@@ -19,7 +19,7 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
+    <string>1.2.0</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleURLTypes</key>
@@ -27,15 +27,13 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>CDMXCrimeTrack</string>
+          <string>cdmxcrimetracker</string>
           <string>com.pjf1822.CDMXCrimeTracker</string>
         </array>
       </dict>
     </array>
     <key>CFBundleVersion</key>
-    <string>1</string>
-    <key>ITSAppUsesNonExemptEncryption</key>
-    <false/>
+    <string>3</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSAppTransportSecurity</key>

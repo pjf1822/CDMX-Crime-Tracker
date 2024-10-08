@@ -68,11 +68,19 @@ export default function HomeScreen() {
     })();
   }, []);
 
-  if (!isMapLoaded) {
-    return <ActivityIndicator size="large" color={myColors.darkGreen} />;
-  }
   return (
     <View style={styles.container}>
+      {!isMapLoaded && (
+        <View
+          style={{
+            height: "100%",
+            width: "100%",
+            backgroundColor: myColors.beige,
+            position: "absolute",
+          }}
+        ></View>
+      )}
+
       {geoData.length > 0 && (
         <Mapbox.MapView
           projection="mercator"
@@ -80,7 +88,9 @@ export default function HomeScreen() {
           style={styles.map}
           ref={mapRef}
           scaleBarEnabled={false}
-          onDidFinishRenderingMapFully={() => setIsMapLoaded(true)}
+          onDidFinishLoadingMap={() => {
+            setIsMapLoaded(true);
+          }}
         >
           <Mapbox.Camera
             centerCoordinate={[-99.1332, 19.4326]}
@@ -100,7 +110,6 @@ export default function HomeScreen() {
                 location?.coords?.latitude,
               ]}
             >
-              {/* <Mapbox.Callout title="You are here!" /> */}
               <View
                 style={{
                   height: 37,
@@ -174,6 +183,7 @@ export default function HomeScreen() {
         </Mapbox.MapView>
       )}
       <CrimeStatsBox />
+
       <Image
         source={require("../assets/logo2.png")}
         style={{
@@ -189,6 +199,7 @@ export default function HomeScreen() {
           borderWidth: 2,
         }}
       />
+
       <CrimePicker />
     </View>
   );
